@@ -17,7 +17,7 @@
 
 # CELL ********************
 
- # Azure Blob Storage access info
+ # Azure Blob Storage access infooo
  blob_account_name = "azureopendatastorage"
  blob_container_name = "nyctlc"
  blob_relative_path = "yellow"
@@ -28,7 +28,8 @@
  # Construct connection path
  wasbs_path = f'wasbs://{blob_container_name}@{blob_account_name}.blob.core.windows.net/{blob_relative_path}'
  print(wasbs_path)
-    
+ print(wasbs_path)
+
  # Read parquet data from Azure Blob Storage path
  blob_df = spark.read.parquet(wasbs_path)
 
