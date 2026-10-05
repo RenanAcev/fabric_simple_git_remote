@@ -17,6 +17,22 @@
 
 # CELL ********************
 
+# MAGIC %%configure -f
+# MAGIC {
+# MAGIC     "defaultlakehouse": {
+# MAGIC         "name": "lh_cicd_basic"
+# MAGIC     }
+# MAGIC }
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
  # Azure Blob Storage access infooo
  blob_account_name = "azureopendatastorage"
  blob_container_name = "nyctlc"
@@ -24,7 +40,9 @@
 
  workspace_name = "fabric_cicd_basic"
  lakehouse_name = "lh_cicd_basic"
-    
+
+file_name = 'yellow_taxi'
+table_name = file_name
  # Construct connection path
  wasbs_path = f'wasbs://{blob_container_name}@{blob_account_name}.blob.core.windows.net/{blob_relative_path}'
  print(wasbs_path)
@@ -53,9 +71,6 @@ display(blob_df)
 
 # CELL ********************
 
-# Declare file name    
-file_name = "yellow_taxi"
-
 # Construct destination path
 output_parquet_path = f"abfss://{workspace_name}@onelake.dfs.fabric.microsoft.com/{lakehouse_name}.Lakehouse/Files/Raw/{file_name}"
 
@@ -73,6 +88,29 @@ blob_df.limit(10000).write.mode("overwrite").parquet(output_parquet_path)
 
 # CELL ********************
 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+raw_df = spark.read.parquet(output_parquet_path)
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+table_name = "yellow_taxi"
+raw_df.write.mode("overwrite").format("delta").saveAsTable(table_name)
 
 # METADATA ********************
 
